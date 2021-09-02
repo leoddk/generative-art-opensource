@@ -1,3 +1,4 @@
+var path = require('path')
 const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
 const {
@@ -23,13 +24,13 @@ const saveImage = (_editionCount) => {
 };
 
 // adds a signature to the top left corner of the canvas
-const signImage = (_sig) => {
-  ctx.fillStyle = "#000000";
-  ctx.font = "bold 30pt Courier";
-  ctx.textBaseline = "top";
-  ctx.textAlign = "left";
-  ctx.fillText(_sig, 40, 40);
-};
+//const signImage = (_sig) => {
+  //ctx.fillStyle = "#000000";
+  //ctx.font = "bold 30pt Courier";
+  //ctx.textBaseline = "top";
+  //ctx.textAlign = "left";
+  //tx.fillText(_sig, 40, 40);
+//};
 
 // generate a random color hue
 const genColor = () => {
@@ -61,12 +62,16 @@ const generateMetadata = (_dna, _edition, _attributesList) => {
 // prepare attributes for the given element to be used as metadata
 const getAttributeForElement = (_element) => {
   let selectedElement = _element.layer.selectedElement;
+  var parentDir = path.dirname(_element.layer.selectedElement.path);
+  var baseDir = require('path').resolve(parentDir, '..');
+  var traitName = path.basename(baseDir);
   let attribute = {
-    name: selectedElement.name,
-    rarity: selectedElement.rarity,
+  trait_type: traitName,
+  value: selectedElement.name,
+  rarity: selectedElement.rarity,
   };
   return attribute;
-};
+  };
 
 // loads an image from the layer path
 // returns the image in a format usable by canvas
@@ -163,6 +168,13 @@ const writeMetaData = (_data) => {
   fs.writeFileSync("./output/_metadata.json", _data);
 };
 
+const saveMetaDataSingleFile = (_editionCount) => {
+  fs.writeFileSync(`./output/${_editionCount}.json`, JSON.stringify(
+metadataList.find((meta) => meta.edition == _editionCount)
+  ));
+};
+
+
 // holds which dna has already been used during generation
 let dnaListByRarity = {};
 // holds metadata for all NFTs
@@ -230,11 +242,12 @@ const startCreating = async () => {
         attributesList.push(getAttributeForElement(element));
       });
       // add an image signature as the edition count to the top left of the image
-      signImage(`#${editionCount}`);
+      //signImage(`#${editionCount}`);
       // write the image to the output directory
       saveImage(editionCount);
       let nftMetadata = generateMetadata(newDna, editionCount, attributesList);
       metadataList.push(nftMetadata)
+      saveMetaDataSingleFile(editionCount);
       console.log('- metadata: ' + JSON.stringify(nftMetadata));
       console.log('- edition ' + editionCount + ' created.');
       console.log();
