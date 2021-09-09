@@ -152,8 +152,7 @@ const layers = [
   addLayer('Pupil'),
   addLayer('Brows'),
   addLayer('Hat'),
-  addLayer('Mouth'),
-  addLayer('Tongue')
+  addLayer('Mouth')
 ];
 
 // provide any specific percentages that are required for a given layer and rarity level
@@ -197,10 +196,6 @@ addRarityPercentForLayer('original', 'Shine', { 'super_rare': 0, 'rare': 0, 'ori
 addRarityPercentForLayer('super_rare', 'String', { 'super_rare': 0, 'rare': 0, 'original': 100 });
 addRarityPercentForLayer('rare', 'String', { 'super_rare': 0, 'rare': 0, 'original': 100 });
 addRarityPercentForLayer('original', 'String', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-
-addRarityPercentForLayer('super_rare', 'Tongue', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Tongue', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Tongue', { 'super_rare': 5, 'rare': 20, 'original': 75 });
 
 module.exports = {
   layers,
