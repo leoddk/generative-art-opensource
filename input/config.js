@@ -124,7 +124,7 @@ const height = 1000;
 const description = "Bloon";
 // base url to use in metadata file
 // the id of the nft will be added to this url, in the example e.g. https://blooncollection.com/NFT/1 for NFT with id 1
-const baseImageUri = "https://blooncollection.com/NFT/";
+const baseImageUri = "https://blooncollection.com/NFT";
 // id for edition to start from
 const startEditionFrom = 1;
 // amount of NFTs to generate in edition
