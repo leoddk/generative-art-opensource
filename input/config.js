@@ -15,7 +15,7 @@ const addRarity = (_id, _from, _to) => {
     value: _id,
     from: _from,
     to: _to,
-    layerPercent: {}
+    layerPercent: {},
   };
   return _rarityWeight;
 };
@@ -35,13 +35,12 @@ const getElements = (_path, _elementCount) => {
       return {
         id: _elementCount,
         name: cleanName(i),
-        path: `${_path}/${i}`
+        path: `${_path}/${i}`,
       };
     });
 };
 
-
-// adds a layer to the configuration. The layer will hold information on all the defined parts and 
+// adds a layer to the configuration. The layer will hold information on all the defined parts and
 // where they should be rendered in the image
 // @param _id - id of the layer
 // @param _position - on which x/y value to render this part
@@ -49,14 +48,14 @@ const getElements = (_path, _elementCount) => {
 // @return a layer object used to dynamically generate the NFTs
 const addLayer = (_id, _position, _size) => {
   if (!_id) {
-    console.log('error adding layer, parameters id required');
+    console.log("error adding layer, parameters id required");
     return null;
   }
   if (!_position) {
     _position = { x: 0, y: 0 };
   }
   if (!_size) {
-    _size = { width: width, height: height }
+    _size = { width: width, height: height };
   }
   // add two different dimension for elements:
   // - all elements with their path information
@@ -73,7 +72,7 @@ const addLayer = (_id, _position, _size) => {
       elements.push(_elementForRarity);
       elementIdsForRarity[rarityWeight.value].push(_elementForRarity.id);
       elementCount++;
-    })
+    });
     elements[rarityWeight.value] = elementsForRarity;
   });
 
@@ -82,7 +81,7 @@ const addLayer = (_id, _position, _size) => {
     position: _position,
     size: _size,
     elements,
-    elementIdsForRarity
+    elementIdsForRarity,
   };
   return elementsForLayer;
 };
@@ -99,17 +98,19 @@ const addRarityPercentForLayer = (_rarityId, _layerId, _percentages) => {
       for (let percentType in _percentages) {
         _percentArray.push({
           id: percentType,
-          percent: _percentages[percentType]
-        })
+          percent: _percentages[percentType],
+        });
       }
       _rarityWeight.layerPercent[_layerId] = _percentArray;
       _rarityFound = true;
     }
   });
   if (!_rarityFound) {
-    console.log(`rarity ${_rarityId} not found, failed to add percentage information`);
+    console.log(
+      `rarity ${_rarityId} not found, failed to add percentage information`
+    );
   }
-}
+};
 
 /**************************************************************
  * BEGIN CONFIG
@@ -129,73 +130,193 @@ const startEditionFrom = 1;
 // amount of NFTs to generate in edition
 const editionSize = 1000;
 // prefix to add to edition dna ids (to distinguish dna counts from different generation processes for the same collection)
-const editionDnaPrefix = 0
+const editionDnaPrefix = 0;
 
 // create required weights
 // for each weight, call 'addRarity' with the id and from which to which element this rarity should be applied
 let rarityWeights = [
-  addRarity('super_rare', 1, 50),
-  addRarity('rare', 51, 300),
-  addRarity('original', 301, 1000)
+  addRarity("super_rare", 1, 50),
+  addRarity("rare", 51, 300),
+  addRarity("original", 301, 1000),
 ];
 
 // create required layers
 // for each layer, call 'addLayer' with the id and optionally the positioning and size
 // the id would be the name of the folder in your input directory, e.g. 'ball' for ./input/ball
 const layers = [
-  addLayer('Background', { x: 0, y: 0 }, { width: width, height: height }),
-  addLayer('Base'),
-  addLayer('Outline'),
-  addLayer('Shine'),
-  addLayer('String'),
-  addLayer('Eye'),
-  addLayer('Pupil'),
-  addLayer('Brows'),
-  addLayer('Hat'),
-  addLayer('Mouth')
+  addLayer("Background", { x: 0, y: 0 }, { width: width, height: height }),
+  addLayer("Base"),
+  addLayer("Outline"),
+  addLayer("Shine"),
+  addLayer("String"),
+  addLayer("Eye"),
+  addLayer("Pupil"),
+  addLayer("Brows"),
+  addLayer("Hat"),
+  addLayer("Mouth"),
 ];
 
 // provide any specific percentages that are required for a given layer and rarity level
 // all provided options are used based on their percentage values to decide which layer to select from
-addRarityPercentForLayer('super_rare', 'Background', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Background', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Background', { 'super_rare': 5, 'rare': 20, 'original': 75 });
+addRarityPercentForLayer("super_rare", "Background", {
+  super_rare: 15,
+  rare: 40,
+  original: 45,
+});
+addRarityPercentForLayer("rare", "Background", {
+  super_rare: 10,
+  rare: 30,
+  original: 60,
+});
+addRarityPercentForLayer("original", "Background", {
+  super_rare: 5,
+  rare: 20,
+  original: 75,
+});
 
-addRarityPercentForLayer('super_rare', 'Base', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Base', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Base', { 'super_rare': 5, 'rare': 20, 'original': 75 });
+addRarityPercentForLayer("super_rare", "Base", {
+  super_rare: 15,
+  rare: 40,
+  original: 45,
+});
+addRarityPercentForLayer("rare", "Base", {
+  super_rare: 10,
+  rare: 30,
+  original: 60,
+});
+addRarityPercentForLayer("original", "Base", {
+  super_rare: 5,
+  rare: 20,
+  original: 75,
+});
 
-addRarityPercentForLayer('super_rare', 'Brows', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Brows', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Brows', { 'super_rare': 5, 'rare': 20, 'original': 75 });
+addRarityPercentForLayer("super_rare", "Brows", {
+  super_rare: 15,
+  rare: 40,
+  original: 45,
+});
+addRarityPercentForLayer("rare", "Brows", {
+  super_rare: 10,
+  rare: 30,
+  original: 60,
+});
+addRarityPercentForLayer("original", "Brows", {
+  super_rare: 5,
+  rare: 20,
+  original: 75,
+});
 
-addRarityPercentForLayer('super_rare', 'Eye', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('rare', 'Eye', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('original', 'Eye', { 'super_rare': 0, 'rare': 0, 'original': 100 });
+addRarityPercentForLayer("super_rare", "Eye", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("rare", "Eye", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("original", "Eye", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
 
-addRarityPercentForLayer('super_rare', 'Hat', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Hat', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Hat', { 'super_rare': 5, 'rare': 20, 'original': 75 });
+addRarityPercentForLayer("super_rare", "Hat", {
+  super_rare: 15,
+  rare: 40,
+  original: 45,
+});
+addRarityPercentForLayer("rare", "Hat", {
+  super_rare: 10,
+  rare: 30,
+  original: 60,
+});
+addRarityPercentForLayer("original", "Hat", {
+  super_rare: 5,
+  rare: 20,
+  original: 75,
+});
 
-addRarityPercentForLayer('super_rare', 'Mouth', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Mouth', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Mouth', { 'super_rare': 5, 'rare': 20, 'original': 75 });
+addRarityPercentForLayer("super_rare", "Mouth", {
+  super_rare: 15,
+  rare: 40,
+  original: 45,
+});
+addRarityPercentForLayer("rare", "Mouth", {
+  super_rare: 10,
+  rare: 30,
+  original: 60,
+});
+addRarityPercentForLayer("original", "Mouth", {
+  super_rare: 5,
+  rare: 20,
+  original: 75,
+});
 
-addRarityPercentForLayer('super_rare', 'Outline', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('rare', 'Outline', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('original', 'Outline', { 'super_rare': 0, 'rare': 0, 'original': 100 });
+addRarityPercentForLayer("super_rare", "Outline", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("rare", "Outline", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("original", "Outline", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
 
-addRarityPercentForLayer('super_rare', 'Pupil', { 'super_rare': 15, 'rare': 40, 'original': 45 });
-addRarityPercentForLayer('rare', 'Pupil', { 'super_rare': 10, 'rare': 30, 'original': 60 });
-addRarityPercentForLayer('original', 'Pupil', { 'super_rare': 5, 'rare': 20, 'original': 75 });
+addRarityPercentForLayer("super_rare", "Pupil", {
+  super_rare: 15,
+  rare: 40,
+  original: 45,
+});
+addRarityPercentForLayer("rare", "Pupil", {
+  super_rare: 10,
+  rare: 30,
+  original: 60,
+});
+addRarityPercentForLayer("original", "Pupil", {
+  super_rare: 5,
+  rare: 20,
+  original: 75,
+});
 
-addRarityPercentForLayer('super_rare', 'Shine', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('rare', 'Shine', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('original', 'Shine', { 'super_rare': 0, 'rare': 0, 'original': 100 });
+addRarityPercentForLayer("super_rare", "Shine", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("rare", "Shine", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("original", "Shine", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
 
-addRarityPercentForLayer('super_rare', 'String', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('rare', 'String', { 'super_rare': 0, 'rare': 0, 'original': 100 });
-addRarityPercentForLayer('original', 'String', { 'super_rare': 0, 'rare': 0, 'original': 100 });
+addRarityPercentForLayer("super_rare", "String", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("rare", "String", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
+addRarityPercentForLayer("original", "String", {
+  super_rare: 0,
+  rare: 0,
+  original: 100,
+});
 
 module.exports = {
   layers,
