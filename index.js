@@ -49,7 +49,7 @@ const generateMetadata = (_dna, _edition, _attributesList) => {
   let dateTime = Date.now();
   let tempMetadata = {
     dna: _dna.join(""),
-    name: `#${_edition}`,
+    name: `Bloon ${_edition}`,
     description: description,
     image: `${baseImageUri}/${_edition}`,
     edition: _edition,
@@ -68,7 +68,6 @@ const getAttributeForElement = (_element) => {
   let attribute = {
     trait_type: traitName,
     value: selectedElement.name,
-    rarity: selectedElement.rarity,
   };
   return attribute;
 };
@@ -184,7 +183,7 @@ const saveMetaDataSingleFile = (_editionCount) => {
 };
 
 // holds which dna has already been used during generation
-let dnaListByRarity = {};
+let dnaListByRarity = [];
 // holds metadata for all NFTs
 let metadataList = [];
 // Create generative art by using the canvas api
@@ -200,10 +199,9 @@ const startCreating = async () => {
   // clear meta data from previous run
   writeMetaData("");
 
-  // prepare dnaList object
-  rarityWeights.forEach((rarityWeight) => {
-    dnaListByRarity[rarityWeight.value] = [];
-  });
+ // rarityWeights.forEach((rarityWeight) => {
+  //   dnaListByRarity[rarityWeight.value] = [];
+  // });
 
   // create NFTs from startEditionFrom to editionSize
   let editionCount = startEditionFrom;
@@ -218,7 +216,7 @@ const startCreating = async () => {
     // calculate the NFT dna by getting a random part for each layer/feature
     // based on the ones available for the given rarity to use during generation
     let newDna = createDna(layers, rarity);
-    while (!isDnaUnique(dnaListByRarity[rarity], newDna)) {
+    while (!isDnaUnique(dnaListByRarity, newDna)) {
       // recalculate dna as this has been used before.
       console.log(
         "found duplicate DNA " + newDna.join("-") + ", recalculate..."
@@ -262,7 +260,7 @@ const startCreating = async () => {
       console.log("- edition " + editionCount + " created.");
       console.log();
     });
-    dnaListByRarity[rarity].push(newDna);
+    dnaListByRarity.push(newDna);
     editionCount++;
   }
   writeMetaData(JSON.stringify(metadataList));
